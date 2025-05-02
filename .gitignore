@@ -1,0 +1,36 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Output of the go coverage tool
+*.coverprofile
+
+# Go build artifacts
+bin/
+build/
+*.o
+*.a
+
+# Dependency directories (vendor/)
+vendor/
+
+# GoLand project files
+.idea/
+
+# VS Code settings
+.vscode/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
