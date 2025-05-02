@@ -3,7 +3,7 @@ package bee
 import (
 	"context"
 	"log/slog"
-	"math/rand/v2"
+	"math/rand"
 	"os"
 	"sync"
 	"testing"
@@ -36,13 +36,13 @@ func (am *atomicMap[K, V]) Data() map[K]V {
 func TestHive(t *testing.T) {
 	logger := NewSlogLogger(slog.New(slog.NewJSONHandler(os.Stderr, nil)))
 	mp := &atomicMap[int, bool]{m: make(map[int]bool)}
-	n := int(rand.Int64N(100000))
+	n := int(rand.Int63n(100000))
 	h := NewHive[int](NewConfig().WithWorkerNumber(10).WithLogger(logger))
 	h.SetHandler(func(_ context.Context, i int) error {
 		mp.Set(i, true)
 		return nil
 	})
-	h.Start(t.Context())
+	h.Start(context.Background())
 	for i := 0; i < n; i++ {
 		h.Push(i)
 	}
