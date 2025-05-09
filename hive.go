@@ -8,36 +8,44 @@ import (
 const DefaultWorkerNumber = 1
 const DefaultQueueSize = 1 << 8
 
+// HiveConfig is the config for the hive
 type HiveConfig struct {
 	WorkerNumber int
 	QueueSize    int
 	Logger       Logger
 }
 
+// NewConfig create a new config with default values
 func NewConfig() *HiveConfig {
 	return &HiveConfig{
 		WorkerNumber: DefaultWorkerNumber,
 		QueueSize:    DefaultQueueSize,
-		Logger:       noLog{},
+		Logger:       NoLog{},
 	}
 }
 
+// WithWorkerNumber set the number of workers, default is 1
 func (h *HiveConfig) WithWorkerNumber(workerNumber int) *HiveConfig {
 	h.WorkerNumber = workerNumber
 	return h
 }
 
+// WithQueueSize set the size of the queue, default is 256
 func (h *HiveConfig) WithQueueSize(queueSize int) *HiveConfig {
 	h.QueueSize = queueSize
 	return h
 }
 
+// WithLogger set the logger, default is NoLog
 func (h *HiveConfig) WithLogger(logger Logger) *HiveConfig {
 	h.Logger = logger
 	return h
 }
 
+// Handler is the function type for handling data in the hive
 type Handler[T any] func(ctx context.Context, data T) error
+
+// Hive is a worker pool that can handle data concurrently
 type Hive[T any] struct {
 	once    sync.Once
 	config  *HiveConfig
