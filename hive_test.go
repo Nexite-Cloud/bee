@@ -51,3 +51,17 @@ func TestHive(t *testing.T) {
 		t.Fatal("len(mp.Data()) != n")
 	}
 }
+
+func TestHiveConfig(t *testing.T) {
+	logger := NewSlogLogger(slog.New(slog.NewJSONHandler(os.Stderr, nil)))
+	hc := NewConfig().WithWorkerNumber(10).WithQueueSize(100).WithLogger(logger)
+	if hc.WorkerNumber != 10 {
+		t.Fatal("hc.WorkerNumber != 10")
+	}
+	if hc.QueueSize != 100 {
+		t.Fatal("hc.QueueSize != 100")
+	}
+	if hc.Logger == nil {
+		t.Fatal("hc.Logger == nil")
+	}
+}
