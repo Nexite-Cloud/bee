@@ -2,6 +2,7 @@ package bee
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"math/rand"
 	"os"
@@ -38,7 +39,8 @@ func TestHive(t *testing.T) {
 	mp := &atomicMap[int, bool]{m: make(map[int]bool)}
 	n := int(rand.Int63n(100000))
 	h := NewHive[int](NewConfig().WithWorkerNumber(10).WithLogger(logger))
-	h.SetHandler(func(_ context.Context, i int) error {
+	h.SetHandler(func(ctx context.Context, i int) error {
+		fmt.Println("worker", GetWorkerIndex(ctx), "processing", i)
 		mp.Set(i, true)
 		return nil
 	})

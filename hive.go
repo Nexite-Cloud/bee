@@ -88,7 +88,8 @@ func (h *Hive[T]) Start(ctx context.Context) {
 	h.once.Do(func() {
 		for i := 0; i < h.config.WorkerNumber; i++ {
 			go func(id int) {
-				h.config.Logger.Info(ctx, "worker started", "worker_id", id)
+				childCtx := context.WithValue(ctx, CtxKeyWorkerIdx, id)
+				h.config.Logger.Info(childCtx, "worker started", "worker_id", id)
 				for {
 					select {
 					case <-ctx.Done():
@@ -97,8 +98,8 @@ func (h *Hive[T]) Start(ctx context.Context) {
 						if !ok {
 							return
 						}
-						h.config.Logger.Info(ctx, "receive data", "worker_id", id, "data", data)
-						h.handle(ctx, id, data)
+						h.config.Logger.Info(childCtx, "receive data", "worker_id", id, "data", data)
+						h.handle(childCtx, id, data)
 					}
 				}
 			}(i)
